@@ -29,6 +29,27 @@ impl TermColor {
         Self { bg, fg }
     }
 }
+/*
+A
+D
+D
+
+C
+U
+R
+R
+E
+N
+T
+
+V
+A
+R
+I
+A
+N
+T
+*/
 #[macro_export]
 macro_rules! colored_println {
     ( $fmt_string: expr, $( $x:expr ),* ) => {
