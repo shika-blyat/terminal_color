@@ -35,10 +35,7 @@ impl TermColor {
 macro_rules! colored_println {
     ( $fmt_string: expr, $( $x:expr ),* ) => {
         {
-            let mut temp_vec = Vec::new();
-            $(
-                temp_vec.push($x);
-            )*
+            let temp_vec = vec![$($x),*];
             $crate::print_colors($fmt_string, temp_vec);
         }
     };
