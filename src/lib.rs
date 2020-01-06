@@ -17,6 +17,7 @@ pub enum Color {
     BrightCyan,
     BrightWhite,
     Reset,
+    Current,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -29,27 +30,7 @@ impl TermColor {
         Self { bg, fg }
     }
 }
-/*
-A
-D
-D
 
-C
-U
-R
-R
-E
-N
-T
-
-V
-A
-R
-I
-A
-N
-T
-*/
 #[macro_export]
 macro_rules! colored_println {
     ( $fmt_string: expr, $( $x:expr ),* ) => {
@@ -121,14 +102,14 @@ pub fn print_colors<'a>(string: &'a str, colors: Vec<TermColor>) {
 }
 fn termcolor_to_code<'a>(color: Option<&TermColor>) -> String {
     match color {
-        Some(TermColor { fg, bg }) => {
-            match (fg, bg) {
-                (Color::Reset, _) => return String::from("\x1b[39;49m"),
-                (_, Color::Reset) => return String::from("\x1b[39;49m"),
-                _ => (),
-            };
-            format!("\x1b[{};{}m", color_to_bgcode(bg), color_to_fgcode(fg))
-        }
+        Some(TermColor { fg, bg }) => match (fg, bg) {
+            (Color::Reset, _) => return String::from("\x1b[39;49m"),
+            (_, Color::Reset) => return String::from("\x1b[39;49m"),
+            (Color::Current, Color::Current) => String::new(),
+            (_, Color::Current) => return format!("\x1b[{}m", color_to_fgcode(fg)),
+            (Color::Current, _) => return format!("\x1b[{}m", color_to_bgcode(bg)),
+            _ => format!("\x1b[{};{}m", color_to_bgcode(bg), color_to_fgcode(fg)),
+        },
         None => return String::from("\x1b[39;49m"),
     }
 }
